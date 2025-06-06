@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>SoundFocus</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-100 min-h-screen flex flex-col items-center justify-start p-6 space-y-6">
+  <h1 class="text-2xl font-bold">SoundFocus</h1>
+
+  <div class="bg-white p-6 rounded-xl shadow w-full max-w-md space-y-4">
+    <select id="sound" class="w-full p-2 border rounded">
+      <option value="rain">Rain</option>
+      <option value="forest">Forest</option>
+      <option value="cafe">Café</option>
+    </select>
+
+    <input id="minutes" type="number" min="1" placeholder="Minutes" class="w-full p-2 border rounded" />
+
+    <button onclick="startSession()" class="w-full bg-blue-600 text-white p-2 rounded">Start Session</button>
+
+    <div id="status" class="text-center text-gray-700"></div>
+
+    <ul id="log" class="text-sm text-gray-500 space-y-1 list-disc pl-5"></ul>
+  </div>
+
+  <audio id="player" loop hidden></audio>
+
+  <script>
+    const sounds = {
+      rain: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
+      forest: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3',
+      cafe: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3'
+    };
+
+    function startSession() {
+      const sound = document.getElementById("sound").value;
+      const minutes = parseInt(document.getElementById("minutes").value);
+      const player = document.getElementById("player");
+      const status = document.getElementById("status");
+      const log = document.getElementById("log");
+
+      if (!minutes || minutes <= 0) return alert("Enter valid minutes");
+
+      player.src = sounds[sound];
+      player.play();
+
+      status.textContent = `Focusing with ${sound} sound for ${minutes} minutes...`;
+      setTimeout(() => {
+        player.pause();
+        const entry = document.createElement("li");
+        entry.textContent = `${sound} session completed: ${minutes} min`;
+        log.appendChild(entry);
+        status.textContent = `Session done!`;
+      }, minutes * 60000);
+    }
+  </script>
+</body>
+</html>
